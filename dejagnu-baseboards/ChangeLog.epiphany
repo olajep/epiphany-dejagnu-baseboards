@@ -1,0 +1,28 @@
+2011-08-06  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* epiphany.exp <slow_simulator>: This is not a slow simulator.
+
+2011-08-06  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* epiphany.exp (cflags): Don't add -fno-merge-constants.
+	* epiphany-sim.exp (cflags): Likewise.
+
+2011-07-26  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* epiphany-sim.exp (board_info ldflags): Might need more than 128 MB.
+
+2011-07-20  Joern Rennecke <joern.rennecke@embecosm.com>
+
+	* epiphany-sim.exp (board_info ldflags): Update.
+
+2010-03-17  Alan Lehotsky <apl@alum.mit.edu>
+
+	* epiphany-sim.exp, epiphany.exp : Make consistent with
+	Embecosm version.
+
+2009-10-19  Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+	Noted for the record, not by the author, date estimated.
+
+	* epiphany.exp: Renamed from baseboards/atdsp.exp.
+	* epiphany-sim.exp: Renamed from baseboards/atdsp-sim.exp.

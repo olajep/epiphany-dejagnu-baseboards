@@ -1,0 +1,71 @@
+## Simple generic config file for the EPIPHANY.
+
+verbose "enter: ~/boards/epiphany.exp"
+
+# Load the generic configuration for this board. This will define a basic set
+# of routines needed by the tool to communicate with the board.
+load_generic_config "sim"
+
+# basic-sim.exp is a basic description for the standard Cygnus simulator.
+load_base_board_description "basic-sim"
+
+# Don't need to tell it the sim subdir in src/sim.
+# setup_sim epiphany
+
+# Simulate with lots of memory.
+
+set_board_info sim "epiphany-elf-run --memory-size=256m"
+set_board_info gdb,target_sim_options " --memory-size=256m"
+
+# Not a slow simulator
+set_board_info slow_simulator 0
+
+# No multilib options
+process_multilib_options ""
+
+# We only support newlib on this
+# target.  We assume that all multilib options have been specified
+# before we get here.
+
+# Compiler to use to build for this board.  This has nothing to do
+# with what compiler is tested if we're testing gcc.
+set_board_info compiler "[find_gcc]"
+
+# Add -fno-merge-constants to cflags because the assembler and/or linker
+# are broken: when strings are merged, the
+# program still refers to the pre-merging places of the constants within
+# their section.  Example: gcc.c-torture/execute/20050502-1.c -O1 .
+set_board_info cflags    "[libgloss_include_flags] [newlib_include_flags]"
+
+# We don't have I/O.
+set profiling_available_saved 0
+
+## Some tests assume that they
+## can malloc STACK_SIZE bytes, not counting malloc overhead.
+#set_board_info gcc,stack_size 2000
+# OTOH, a small stack size limits coverage, and besides, libstdc++-v3 tests
+# disregard STACK_SIZE; some need more than 128 MB heap.  We should also
+# expect to need up to 1 MB of stack for some tests.
+# We have above specified that the initial memory region in the simulator
+# is to be 256 MB; we'll use this for program & heap.  The 32 MB of high
+# memory banks is then left for the stack.
+set_board_info ldflags "[libgloss_link_flags] [newlib_link_flags] -Wl,--defsym=___text_start=0x60,--defsym=___heap_end=256m"
+
+# No linker script for this board.
+set_board_info ldscript ""
+
+# set_board_info target "epiphany"
+
+# set_board_info is_simulator 1
+
+# The simulator doesn't return exit statuses and we need to indicate this.
+#set_board_info needs_status_wrapper 1
+
+# Can't pass arguments to this target.
+set_board_info noargs 1
+
+# No signals.
+# set_board_info gdb,nosignals 1
+
+# And it can't call functions.
+# set_board_info gdb,cannot_call_functions 1
