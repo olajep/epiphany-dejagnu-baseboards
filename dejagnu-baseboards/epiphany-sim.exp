@@ -65,3 +65,6 @@ set_board_info noargs 1
 
 # And it can't call functions.
 # set_board_info gdb,cannot_call_functions 1
+
+# Some gcc tests need more time.
+set_board_info gcc,timeout 700

@@ -1,5 +1,10 @@
 2015-10-05  Ola Jeppsson  <ola@adapteva.com>
 
+	* epiphany-sim.exp (board_info gcc,timeout): Increase timeout to
+	700 seconds.
+
+2015-10-05  Ola Jeppsson  <ola@adapteva.com>
+
 	* epiphany-sim.exp: Modify to work with multicore branch that
 	was merge into epiphany-gdb-7.10
 
