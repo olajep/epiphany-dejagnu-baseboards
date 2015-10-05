@@ -1,3 +1,8 @@
+2015-10-05  Ola Jeppsson  <ola@adapteva.com>
+
+	* epiphany-sim.exp: Modify to work with multicore branch that
+	was merge into epiphany-gdb-7.10
+
 2011-08-06  Joern Rennecke <joern.rennecke@embecosm.com>
 
 	* epiphany.exp <slow_simulator>: This is not a slow simulator.

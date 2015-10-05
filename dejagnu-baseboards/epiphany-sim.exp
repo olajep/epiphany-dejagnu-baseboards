@@ -9,13 +9,14 @@ load_generic_config "sim"
 # basic-sim.exp is a basic description for the standard Cygnus simulator.
 load_base_board_description "basic-sim"
 
-# Don't need to tell it the sim subdir in src/sim.
-# setup_sim epiphany
+# Don't use the explicit name ...
+#set_board_info sim "epiphany-elf-run"
+# ... but prefer $pwd/sim/epiphany/run. (in unisrc build). if it exists.
+setup_sim epiphany
 
 # Simulate with lots of memory.
-
-set_board_info sim "epiphany-elf-run --memory-size=256m"
-set_board_info gdb,target_sim_options " --memory-size=256m"
+set_board_info gdb,target_sim_options " --e-coreid 0x808 --e-rows 1 --e-cols 1 --e-ext-ram-size 288"
+set_board_info sim,options            " --e-coreid 0x808 --e-rows 1 --e-cols 1 --e-ext-ram-size 288"
 
 # Not a slow simulator
 set_board_info slow_simulator 0
@@ -31,10 +32,6 @@ process_multilib_options ""
 # with what compiler is tested if we're testing gcc.
 set_board_info compiler "[find_gcc]"
 
-# Add -fno-merge-constants to cflags because the assembler and/or linker
-# are broken: when strings are merged, the
-# program still refers to the pre-merging places of the constants within
-# their section.  Example: gcc.c-torture/execute/20050502-1.c -O1 .
 set_board_info cflags    "[libgloss_include_flags] [newlib_include_flags]"
 
 # We don't have I/O.
@@ -45,14 +42,13 @@ set profiling_available_saved 0
 #set_board_info gcc,stack_size 2000
 # OTOH, a small stack size limits coverage, and besides, libstdc++-v3 tests
 # disregard STACK_SIZE; some need more than 128 MB heap.  We should also
-# expect to need up to 1 MB of stack for some tests.
-# We have above specified that the initial memory region in the simulator
-# is to be 256 MB; we'll use this for program & heap.  The 32 MB of high
-# memory banks is then left for the stack.
-set_board_info ldflags "[libgloss_link_flags] [newlib_link_flags] -Wl,--defsym=___text_start=0x60,--defsym=___heap_end=256m"
+# expect to need up to 1 MB of stack for some tests. That's why the stack is
+# placed in external memory.
+
+set_board_info ldflags "[libgloss_link_flags] [newlib_link_flags] -Wl,--section-start=IVT_RESET=0,--section-start=.init=0x100,-Ttext=0x200,--defsym=__heap_start=0x90000000,--defsym=__heap_end=0x9d000000,--defsym=__stack=0x9ffffff0"
 
 # No linker script for this board.
-set_board_info ldscript ""
+#set_board_info ldscript "-T[file dirname [info script]]/../fast.ldf"
 
 # set_board_info target "epiphany"
 
